@@ -3,8 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="es.iessaladillo.pedrojoya.pr06.ui.users.UsersActivity">
 
     <!-- El ReciclerView tiene un padding @dimen/margin_half -->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lstContact"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/users_activity_item"
+        android:padding="@dimen/margin_half"/>
+
+    <ImageView
+        android:id="@+id/imgEmptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_person_add_black_48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblEmptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/users_lblEmptyView"
+        app:layout_constraintEnd_toEndOf="@+id/imgEmptyView"
+        app:layout_constraintStart_toStartOf="@+id/imgEmptyView"
+        app:layout_constraintTop_toBottomOf="@id/imgEmptyView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

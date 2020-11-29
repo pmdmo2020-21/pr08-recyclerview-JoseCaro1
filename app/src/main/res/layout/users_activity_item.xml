@@ -22,6 +22,67 @@
              @dimen/users_item_imgPhoto_width
         -->
 
+        <TextView
+            android:id="@+id/cardName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="nombre"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cardEmail"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardName" />
+
+        <TextView
+            android:id="@+id/cardPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="phone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardEmail" />
+
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="@dimen/users_item_imgPhoto_width"
+            android:layout_height="@dimen/users_item_imgPhoto_width"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_map_24dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnEdit"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardName" />
+
+        <Button
+            android:id="@+id/btnEdit"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="EDIT"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardPhone" />
+
+        <Button
+            android:id="@+id/btnDel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:text="DELETE"
+            app:layout_constraintStart_toEndOf="@id/btnEdit"
+            app:layout_constraintTop_toBottomOf="@id/cardPhone">
+
+        </Button>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
