@@ -5,17 +5,19 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.*
+import com.google.android.material.snackbar.Snackbar
 import es.iessaladillo.pedrojoya.pr06.R
 import es.iessaladillo.pedrojoya.pr06.data.Database
 import es.iessaladillo.pedrojoya.pr06.data.model.User
 import es.iessaladillo.pedrojoya.pr06.databinding.UsersActivityBinding
 import es.iessaladillo.pedrojoya.pr06.ui.add_user.AddUserActivity
 import es.iessaladillo.pedrojoya.pr06.ui.edit_user.EditUserActivity
+import es.iessaladillo.pedrojoya.pr06.utils.doOnSwiped
 import kotlinx.android.synthetic.main.users_activity_item.*
+
 
 class UsersActivity : AppCompatActivity() {
 
@@ -62,13 +64,16 @@ class UsersActivity : AppCompatActivity() {
     }
 
     private fun navigateEditUser(position: Int) {
-        val user: User = listAdapter.getItem(position)
+        val user: User = listAdapter.currentList[position]
         editUserActivityLayout(user)
     }
 
     private fun deleteUser(position: Int) {
-        val user: User = listAdapter.getItem(position)
+        val user: User = listAdapter.currentList[position]
         viewModel.deleteUser(user)
+        Snackbar.make(binding.root, getString(R.string.user_del,user.nombre), Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo) { viewModel.insertUser(user) }
+                .show()
     }
 
 
@@ -109,6 +114,8 @@ class UsersActivity : AppCompatActivity() {
             itemAnimator = DefaultItemAnimator()
             addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
             adapter = listAdapter
+            doOnSwiped { viewHolder, _ -> deleteUser(viewHolder.absoluteAdapterPosition) }
+            doOnSwiped(ItemTouchHelper.RIGHT)
         }
     }
 
@@ -121,7 +128,6 @@ class UsersActivity : AppCompatActivity() {
         val intent: Intent = EditUserActivity.newIntent(this, user)
         startActivity(intent)
     }
-
 
 }
 

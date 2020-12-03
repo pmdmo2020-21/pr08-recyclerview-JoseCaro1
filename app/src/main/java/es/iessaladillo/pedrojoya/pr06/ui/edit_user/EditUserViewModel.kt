@@ -1,11 +1,14 @@
 package es.iessaladillo.pedrojoya.pr06.ui.edit_user
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import es.iessaladillo.pedrojoya.pr06.R
 import es.iessaladillo.pedrojoya.pr06.data.DataSource
 import es.iessaladillo.pedrojoya.pr06.data.model.User
+import es.iessaladillo.pedrojoya.pr06.utils.Event
 import java.util.*
 
 // TODO:
@@ -14,7 +17,7 @@ import java.util.*
 const val URL = "URL"
 const val USER = "USER"
 
-class EditUserViewModel(private val dataSource: DataSource, savedStateHandle: SavedStateHandle) : ViewModel() {
+class EditUserViewModel(private val dataSource: DataSource,private val application: Application, savedStateHandle: SavedStateHandle) : ViewModel() {
 
     // Para obtener un URL de foto de forma aleatoria (tendrás que definir
     // e inicializar el random a nivel de clase.
@@ -23,6 +26,8 @@ class EditUserViewModel(private val dataSource: DataSource, savedStateHandle: Sa
     val randomUrl: LiveData<String> get() = _randomUrl
     private var _userMutableLiveData: MutableLiveData<User> = savedStateHandle.getLiveData(USER)
     val userLiveData: LiveData<User> get() = _userMutableLiveData
+    private var _message: MutableLiveData<Event<String>> = MutableLiveData()
+    val message: LiveData<Event<String>> get() = _message
 
 
     private fun getRandomPhotoUrl(): String = "https://picsum.photos/id/${random.nextInt(100)}/400/300"
@@ -45,6 +50,7 @@ class EditUserViewModel(private val dataSource: DataSource, savedStateHandle: Sa
     fun checkFieldForm(list: List<String>): Boolean {
         list.forEach {
             if (it.isBlank()) {
+                _message.value=Event(application.getString(R.string.user_invalid_data))
                 return false
             }
 

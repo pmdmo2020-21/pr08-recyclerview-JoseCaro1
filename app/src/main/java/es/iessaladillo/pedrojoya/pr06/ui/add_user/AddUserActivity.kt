@@ -3,6 +3,8 @@ package es.iessaladillo.pedrojoya.pr06.ui.add_user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.service.autofill.CharSequenceTransformation
+import android.text.Editable
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -17,7 +19,9 @@ import es.iessaladillo.pedrojoya.pr06.data.model.User
 import es.iessaladillo.pedrojoya.pr06.databinding.UserActivityBinding
 import es.iessaladillo.pedrojoya.pr06.utils.SoftInputUtils.hideSoftKeyboard
 import es.iessaladillo.pedrojoya.pr06.utils.loadUrl
+import es.iessaladillo.pedrojoya.pr06.utils.observeEvent
 import kotlinx.android.synthetic.main.user_activity.*
+import kotlinx.android.synthetic.main.users_activity_item.*
 import kotlin.random.Random
 
 
@@ -35,7 +39,7 @@ class AddUserActivity : AppCompatActivity() {
         UserActivityBinding.inflate(layoutInflater)
     }
     private val viewModel: AddUserViewModel by viewModels() {
-        AddUserViewModelFactory(Database,this)
+        AddUserViewModelFactory(Database, this, application)
     }
 
     // NO TOCAR: Estos métodos gestionan el menú y su gestión
@@ -60,7 +64,7 @@ class AddUserActivity : AppCompatActivity() {
 
     // FIN NO TOCAR
 
-    private fun onSave():Boolean {
+    private fun onSave(): Boolean {
         hideSoftKeyboard(binding.root)
         binding.run {
             if (viewModel.checkFieldForm(listOf(txtFormName.text.toString(), txtFormEmail.text.toString(), txtFormPhone.text.toString()))) {
@@ -68,20 +72,26 @@ class AddUserActivity : AppCompatActivity() {
                         txtFormAddress.text.toString(), txtFormWeb.text.toString(), viewModel.randomUrl.value!!)
                 viewModel.saveUser(user)
                 finish()
-
             }
-            Snackbar.make(root,R.string.user_invalid_data, Snackbar.LENGTH_SHORT).show()
-
         }
+
         return true
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        setImage()
+        observeViewModel()
         setupView()
 
+    }
+
+    private fun observeMessage() {
+        viewModel.message.observeEvent(this) {
+            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT)
+                    .show()
+        }
     }
 
     private fun setImage() {
@@ -90,9 +100,14 @@ class AddUserActivity : AppCompatActivity() {
         })
     }
 
+    private fun observeViewModel() {
+        setImage()
+        observeMessage()
+    }
+
     private fun setupView() {
         binding.imgForm.setOnClickListener { viewModel.changeImage() }
-        binding.txtFormWeb.setOnEditorActionListener { _,_,_ -> onSave() }
+        binding.txtFormWeb.setOnEditorActionListener { _, _, _ -> onSave() }
     }
 
 

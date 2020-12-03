@@ -16,6 +16,7 @@ import es.iessaladillo.pedrojoya.pr06.data.Database
 import es.iessaladillo.pedrojoya.pr06.data.model.User
 import es.iessaladillo.pedrojoya.pr06.databinding.UserActivityBinding
 import es.iessaladillo.pedrojoya.pr06.utils.loadUrl
+import es.iessaladillo.pedrojoya.pr06.utils.observeEvent
 
 class EditUserActivity : AppCompatActivity() {
 
@@ -60,26 +61,25 @@ class EditUserActivity : AppCompatActivity() {
     }
 
     private val viewModel: EditUserViewModel by viewModels() {
-        EditUserViewModelFactory(Database,this)
+        EditUserViewModelFactory(Database, application, this)
     }
 
-    private fun onSave() :Boolean {
+    private fun onSave(): Boolean {
         binding.run {
-            if (viewModel.checkFieldForm(listOf(txtFormName.text.toString(),txtFormEmail.text.toString(),txtFormPhone.text.toString()))) {
+            if (viewModel.checkFieldForm(listOf(txtFormName.text.toString(), txtFormEmail.text.toString(), txtFormPhone.text.toString()))) {
 
                 viewModel.userLiveData.value?.run {
-                    nombre=txtFormName.text.toString()
-                    email= txtFormEmail.text.toString()
-                    phoneNumber=txtFormPhone.text.toString()
-                    address=txtFormAddress.text.toString()
-                    web=txtFormWeb.text.toString()
-                    photoUrl=viewModel.randomUrl.value!!
+                    nombre = txtFormName.text.toString()
+                    email = txtFormEmail.text.toString()
+                    phoneNumber = txtFormPhone.text.toString()
+                    address = txtFormAddress.text.toString()
+                    web = txtFormWeb.text.toString()
+                    photoUrl = viewModel.randomUrl.value!!
 
                 }
                 viewModel.updateUser()
                 finish()
             }
-            Snackbar.make(root,R.string.user_invalid_data, Snackbar.LENGTH_SHORT).show()
         }
         return true
     }
@@ -91,14 +91,26 @@ class EditUserActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             getIntentData()
         }
-        setImage()
+        observeViewModel()
         setupViews()
+    }
+
+    private fun observeMessage() {
+        viewModel.message.observeEvent(this) {
+            Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT)
+                    .show()
+        }
     }
 
     private fun setImage() {
         viewModel.randomUrl.observe(this, {
             binding.imgForm.loadUrl(it)
         })
+    }
+
+    private fun observeViewModel() {
+        setImage()
+        observeMessage()
     }
 
     private fun setupViews() {

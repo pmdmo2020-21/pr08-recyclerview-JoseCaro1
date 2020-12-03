@@ -18,6 +18,10 @@ class UsersActivityViewModel(private val dataSource:DataSource): ViewModel() {
           dataSource.deleteUser(user)
      }
 
+     fun insertUser(user:User) {
+          dataSource.insertUser(user)
+     }
+
 
 
 }
